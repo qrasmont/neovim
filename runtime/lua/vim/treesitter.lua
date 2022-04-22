@@ -2,13 +2,14 @@ local a = vim.api
 local query = require'vim.treesitter.query'
 local language = require'vim.treesitter.language'
 local LanguageTree = require'vim.treesitter.languagetree'
+local utils = require'vim.treesitter.utils'
 
 -- TODO(bfredl): currently we retain parsers for the lifetime of the buffer.
 -- Consider use weak references to release parser if all plugins are done with
 -- it.
 local parsers = {}
 
-local M = vim.tbl_extend("error", query, language)
+local M = vim.tbl_extend("error", query, language, utils)
 
 M.language_version = vim._ts_get_language_version()
 M.minimum_language_version = vim._ts_get_minimum_language_version()
@@ -23,6 +24,9 @@ setmetatable(M, {
         return t[k]
       elseif k == "query" then
         t[k] = require"vim.treesitter.query"
+        return t[k]
+      elseif k == "utils" then
+        t[k] = require"vim.treesitter.utils"
         return t[k]
       end
    end
